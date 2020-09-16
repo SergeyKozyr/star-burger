@@ -1,8 +1,11 @@
 from django.templatetags.static import static
 from django.http import JsonResponse
+from rest_framework.response import Response
+from rest_framework.renderers import JSONRenderer, BrowsableAPIRenderer
+from rest_framework.decorators import api_view, renderer_classes
 
 
-from .models import Product
+from .models import Product, Order, OrderItem
 
 
 def banners_list_api(request):
@@ -57,6 +60,25 @@ def product_list_api(request):
     })
 
 
+@api_view(['POST'])
+@renderer_classes((JSONRenderer, BrowsableAPIRenderer, ))
 def register_order(request):
-    # TODO это лишь заглушка
-    return JsonResponse({})
+    order = request.data
+    order_items = order['products']
+
+    new_order = Order(
+        firstname=order['firstname'],
+        lastname=order['lastname'],
+        phonenumber=order['phonenumber'],
+        address=order['address']
+    )
+    new_order.save()
+
+    for item in order_items:
+        OrderItem.objects.create(
+            order=new_order,
+            product=Product.objects.get(pk=item['product']),
+            quantity=item['quantity']
+        )
+
+    return Response(order)
