@@ -6,6 +6,7 @@ from rest_framework.decorators import api_view, renderer_classes
 
 
 from .models import Product, Order, OrderItem
+from .serializers import OrderSerializer, OrderItemSerializer
 
 
 def banners_list_api(request):
@@ -63,22 +64,17 @@ def product_list_api(request):
 @api_view(['POST'])
 @renderer_classes((JSONRenderer, BrowsableAPIRenderer, ))
 def register_order(request):
-    order = request.data
-    order_items = order['products']
+    serializer = OrderSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
 
-    new_order = Order(
-        firstname=order['firstname'],
-        lastname=order['lastname'],
-        phonenumber=order['phonenumber'],
-        address=order['address']
+    new_order = Order.objects.create(
+        firstname=serializer.validated_data['firstname'],
+        lastname=serializer.validated_data['lastname'],
+        phonenumber=serializer.validated_data['phonenumber'],
+        address=serializer.validated_data['address']
     )
-    new_order.save()
 
-    for item in order_items:
-        OrderItem.objects.create(
-            order=new_order,
-            product=Product.objects.get(pk=item['product']),
-            quantity=item['quantity']
-        )
-
-    return Response(order)
+    order_items_fields = serializer.validated_data['products']
+    order_items = [OrderItem(order=new_order, **fields) for fields in order_items_fields]
+    OrderItem.objects.bulk_create(order_items)
+    return Response(new_order)
