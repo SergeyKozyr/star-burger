@@ -81,10 +81,18 @@ class Order(models.Model):
 
 
 class OrderItem(models.Model):
-    order = models.ForeignKey(Order, verbose_name='Заказ', on_delete=models.CASCADE)
+    order = models.ForeignKey(Order, verbose_name='Заказ', related_name='items', on_delete=models.CASCADE)
     product = models.ForeignKey(Product, verbose_name='товар', on_delete=models.CASCADE)
     quantity = models.PositiveSmallIntegerField('Количество')
+    price = models.PositiveSmallIntegerField('Стоимость')
 
     class Meta:
         verbose_name = 'элемент заказа'
         verbose_name_plural = 'элементы заказа'
+
+    def __str__(self):
+        return f'{self.product} {self.quantity} шт. - {self.order}'
+
+    @property
+    def total_price(self):
+        return int(self.product.price * self.quantity)

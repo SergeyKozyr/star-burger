@@ -4,9 +4,8 @@ from rest_framework.response import Response
 from rest_framework.renderers import JSONRenderer, BrowsableAPIRenderer
 from rest_framework.decorators import api_view, renderer_classes
 
-
 from .models import Product, Order, OrderItem
-from .serializers import OrderSerializer, OrderItemSerializer
+from .serializers import OrderSerializer
 
 
 def banners_list_api(request):
@@ -75,7 +74,7 @@ def register_order(request):
     )
 
     order_items_fields = serializer.validated_data['products']
-    order_items = [OrderItem(order=new_order, **fields) for fields in order_items_fields]
+    order_items = [OrderItem(order=new_order, price=fields.get('product').price * fields.get('quantity'), **fields) for fields in order_items_fields]
     OrderItem.objects.bulk_create(order_items)
 
     serializer = OrderSerializer(new_order)
