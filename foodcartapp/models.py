@@ -76,6 +76,7 @@ class Order(models.Model):
         ('unprocessed', 'Необработанный')
     ]
     status = models.CharField('Статус', max_length=11, choices=STATUS_CHOICES, default='unprocessed')
+    comment = models.TextField('Комментарий', blank=True)
 
     class Meta:
         verbose_name = 'заказ'
