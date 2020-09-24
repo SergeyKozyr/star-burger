@@ -71,6 +71,11 @@ class Order(models.Model):
     lastname = models.CharField('Фамилия', max_length=30)
     phonenumber = models.CharField('Номер телефона', max_length=12)
     address = models.CharField('Адрес', max_length=100)
+    STATUS_CHOICES = [
+        ('processed', 'Обработанный'),
+        ('unprocessed', 'Необработанный')
+    ]
+    status = models.CharField('Статус', max_length=11, choices=STATUS_CHOICES, default='unprocessed')
 
     class Meta:
         verbose_name = 'заказ'
