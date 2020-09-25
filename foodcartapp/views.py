@@ -1,7 +1,6 @@
 from django.templatetags.static import static
 from django.http import JsonResponse
 from django.db import transaction
-from django.utils import timezone
 from rest_framework.response import Response
 from rest_framework.renderers import JSONRenderer, BrowsableAPIRenderer
 from rest_framework.decorators import api_view, renderer_classes

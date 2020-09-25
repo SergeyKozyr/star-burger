@@ -90,12 +90,20 @@ class Order(models.Model):
     called_at = models.DateTimeField('Время звонка', blank=True, null=True)
     delivered_at = models.DateTimeField('Время доставки', blank=True, null=True)
 
-    class Meta:
-        verbose_name = 'заказ'
-        verbose_name_plural = 'заказы'
+    def order_restaurants(self):
+        order_items = self.items.all()
+        restaurant_items = set()
+        for order_item in order_items:
+            restaurant_items.update(order_item.product.menu_items.filter(availability=True))
+
+        return {order_item.restaurant for order_item in restaurant_items}
 
     def __str__(self):
         return f'{self.firstname} {self.lastname}, {self.address}'
+
+    class Meta:
+        verbose_name = 'заказ'
+        verbose_name_plural = 'заказы'
 
 
 class OrderItem(models.Model):
