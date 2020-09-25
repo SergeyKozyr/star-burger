@@ -72,11 +72,19 @@ class Order(models.Model):
     lastname = models.CharField('Фамилия', max_length=30)
     phonenumber = models.CharField('Номер телефона', max_length=12)
     address = models.CharField('Адрес', max_length=100)
+
     STATUS_CHOICES = [
         ('processed', 'Обработанный'),
         ('unprocessed', 'Необработанный')
     ]
+
+    PAYMENT_CHOICES = [
+        ('cash', 'Наличными'),
+        ('online', 'Электронно')
+    ]
+
     status = models.CharField('Статус', max_length=11, choices=STATUS_CHOICES, default='unprocessed')
+    payment_method = models.CharField('Способ оплаты', max_length=6, choices=PAYMENT_CHOICES, default='online')
     comment = models.TextField('Комментарий', blank=True)
     registered_at = models.DateTimeField('Время создания заказа', default=timezone.now)
     called_at = models.DateTimeField('Время звонка', blank=True, null=True)
