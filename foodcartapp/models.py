@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
+from django.utils import timezone
 
 
 class Restaurant(models.Model):
@@ -77,6 +78,9 @@ class Order(models.Model):
     ]
     status = models.CharField('Статус', max_length=11, choices=STATUS_CHOICES, default='unprocessed')
     comment = models.TextField('Комментарий', blank=True)
+    registered_at = models.DateTimeField('Время создания заказа', default=timezone.now)
+    called_at = models.DateTimeField('Время звонка', blank=True, null=True)
+    delivered_at = models.DateTimeField('Время доставки', blank=True, null=True)
 
     class Meta:
         verbose_name = 'заказ'
