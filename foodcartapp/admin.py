@@ -26,7 +26,7 @@ class OrderAdmin(admin.ModelAdmin):
         if 'next' in request.GET and is_safe_url(request.GET['next'], settings.ALLOWED_HOSTS):
             return redirect(request.GET['next'])
 
-        return super(admin.ModelAdmin, self).response_change(request, obj)
+        return super().response_change(request, obj)
 
 
 @admin.register(Restaurant)

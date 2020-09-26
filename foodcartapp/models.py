@@ -1,12 +1,17 @@
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils import timezone
+from .utils import fetch_coordinates, get_distance
+from operator import itemgetter
 
 
 class Restaurant(models.Model):
     name = models.CharField('название', max_length=50)
     address = models.CharField('адрес', max_length=100, blank=True)
     contact_phone = models.CharField('контактный телефон', max_length=50, blank=True)
+
+    def coordinates(self):
+        return fetch_coordinates(self.address)
 
     def __str__(self):
         return self.name
@@ -93,10 +98,13 @@ class Order(models.Model):
     def order_restaurants(self):
         order_items = self.items.all()
         restaurant_items = set()
+        order_coordinates = fetch_coordinates(self.address)
         for order_item in order_items:
             restaurant_items.update(order_item.product.menu_items.filter(availability=True))
 
-        return {order_item.restaurant for order_item in restaurant_items}
+        restaurants = {(order_item.restaurant, get_distance(order_coordinates, order_item.restaurant.coordinates())) for order_item in restaurant_items}
+
+        return sorted(restaurants, key=itemgetter(1))
 
     def __str__(self):
         return f'{self.firstname} {self.lastname}, {self.address}'
