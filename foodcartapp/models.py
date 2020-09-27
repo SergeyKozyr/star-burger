@@ -13,7 +13,7 @@ class Restaurant(models.Model):
     def coordinates(self):
         restaurant_coordinates = cache.get(f'restaurant_{self.id}')
 
-        if  restaurant_coordinates is None:
+        if restaurant_coordinates is None:
             lon, lat = fetch_coordinates(self.address)
             cache.set(f'restaurant_{self.id}', (lat, lon))
 
@@ -108,7 +108,7 @@ class Order(models.Model):
             lon, lat = fetch_coordinates(self.address)
             cache.set(f'client_{self.id}', (lat, lon), 300)
 
-        return client_coordinates 
+        return client_coordinates
 
     def restaurants(self):
         order_items = self.items.all()
@@ -118,7 +118,7 @@ class Order(models.Model):
             restaurant_items.update(order_item.product.menu_items.filter(availability=True))
 
         restaurants = {(order_item.restaurant, get_distance(self.coordinates(), order_item.restaurant.coordinates())) for order_item in restaurant_items}
-       
+
         return sorted(restaurants, key=itemgetter(1))
 
     def __str__(self):
