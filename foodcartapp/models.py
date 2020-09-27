@@ -11,8 +11,13 @@ class Restaurant(models.Model):
     contact_phone = models.CharField('контактный телефон', max_length=50, blank=True)
 
     def coordinates(self):
-        lon, lat = fetch_coordinates(self.address)
-        return lat, lon
+        restaurant_coordinates = cache.get(f'restaurant_{self.id}')
+
+        if  restaurant_coordinates is None:
+            lon, lat = fetch_coordinates(self.address)
+            cache.set(f'restaurant_{self.id}', (lat, lon))
+
+        return restaurant_coordinates
 
     def __str__(self):
         return self.name
@@ -97,17 +102,23 @@ class Order(models.Model):
     delivered_at = models.DateTimeField('Время доставки', blank=True, null=True)
 
     def coordinates(self):
-        lon, lat = fetch_coordinates(self.address)
-        return lat, lon
+        client_coordinates = cache.get(f'client_{self.id}')
+
+        if client_coordinates is None:
+            lon, lat = fetch_coordinates(self.address)
+            cache.set(f'client_{self.id}', (lat, lon), 300)
+
+        return client_coordinates 
 
     def restaurants(self):
         order_items = self.items.all()
         restaurant_items = set()
+
         for order_item in order_items:
             restaurant_items.update(order_item.product.menu_items.filter(availability=True))
 
         restaurants = {(order_item.restaurant, get_distance(self.coordinates(), order_item.restaurant.coordinates())) for order_item in restaurant_items}
-
+       
         return sorted(restaurants, key=itemgetter(1))
 
     def __str__(self):

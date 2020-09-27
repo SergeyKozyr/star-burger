@@ -38,6 +38,7 @@ python --version
 ```sh
 python -m venv venv
 ```
+
 Активируйте его. На разных операционных системах это делается разными командами:
 - Windows: `.\venv\Scripts\activate`
 - MacOS/Linux: `source venv/bin/activate`
@@ -46,6 +47,13 @@ python -m venv venv
 
 ```sh
 cd star-burger
+```
+
+Получите [API ключ Яндекса](https://developer.tech.yandex.ru/) и создайте переменные окружения:
+```
+YANDEX_API_KEY
+SECRET_KEY
+DEBUG
 ```
 
 Установите зависимости в виртуальное окружение:
