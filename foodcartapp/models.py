@@ -96,14 +96,17 @@ class Order(models.Model):
     called_at = models.DateTimeField('Время звонка', blank=True, null=True)
     delivered_at = models.DateTimeField('Время доставки', blank=True, null=True)
 
-    def order_restaurants(self):
+    def coordinates(self):
+        lon, lat = fetch_coordinates(self.address)
+        return lat, lon
+
+    def restaurants(self):
         order_items = self.items.all()
         restaurant_items = set()
-        lon, lat = fetch_coordinates(self.address)
         for order_item in order_items:
             restaurant_items.update(order_item.product.menu_items.filter(availability=True))
 
-        restaurants = {(order_item.restaurant, get_distance((lat, lon), order_item.restaurant.coordinates())) for order_item in restaurant_items}
+        restaurants = {(order_item.restaurant, get_distance(self.coordinates(), order_item.restaurant.coordinates())) for order_item in restaurant_items}
 
         return sorted(restaurants, key=itemgetter(1))
 
