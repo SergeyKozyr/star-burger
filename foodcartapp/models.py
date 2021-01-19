@@ -94,12 +94,12 @@ class Order(models.Model):
         ('online', 'Электронно')
     ]
 
-    status = models.CharField('Статус', max_length=11, choices=STATUS_CHOICES, default='unprocessed')
-    payment_method = models.CharField('Способ оплаты', max_length=6, choices=PAYMENT_CHOICES, default='online')
+    status = models.CharField('Статус', max_length=11, choices=STATUS_CHOICES, default='unprocessed', db_index=True)
+    payment_method = models.CharField('Способ оплаты', max_length=6, choices=PAYMENT_CHOICES, default='online', db_index=True)
     comment = models.TextField('Комментарий', blank=True)
-    registered_at = models.DateTimeField('Время создания заказа', default=timezone.now)
-    called_at = models.DateTimeField('Время звонка', blank=True, null=True)
-    delivered_at = models.DateTimeField('Время доставки', blank=True, null=True)
+    registered_at = models.DateTimeField('Время создания заказа', default=timezone.now, db_index=True)
+    called_at = models.DateTimeField('Время звонка', blank=True, null=True, db_index=True)
+    delivered_at = models.DateTimeField('Время доставки', blank=True, null=True, db_index=True)
 
     def coordinates(self):
         client_coordinates = cache.get(f'client_{self.id}')
@@ -141,7 +141,3 @@ class OrderItem(models.Model):
 
     def __str__(self):
         return f'{self.product} {self.quantity} шт. - {self.order}'
-
-    # @property
-    # def total_price(self):
-    #     return int(self.product.price * self.quantity)
