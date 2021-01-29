@@ -41,7 +41,7 @@
           <details>
               <summary>Развернуть</summary>
               <ul>
-              {% for restaurant, distance in order.restaurants %}
+              {% for restaurant, distance in order.get_restaurants %}
                 <li>{{ restaurant }} - {{ distance }} км.</li>
               {% endfor %}
               </ul>
