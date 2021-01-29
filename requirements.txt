@@ -2,6 +2,8 @@ django==3.0.7
 django-debug-toolbar==2.2
 djangorestframework==3.11.1
 dj-database-url==0.5.0
+django-phonenumber-field[phonenumbers]
 Pillow==7.1.2
 requests==2.22.0
 geopy==2.0.0
+environs==9.3.0

@@ -1,8 +1,10 @@
 from django.db import models
 from django.utils import timezone
 from django.core.cache import cache
+
 from utilities.utils import fetch_coordinates, get_distance
 from operator import itemgetter
+from phonenumber_field.modelfields import PhoneNumberField
 
 
 class Restaurant(models.Model):
@@ -81,7 +83,7 @@ class RestaurantMenuItem(models.Model):
 class Order(models.Model):
     firstname = models.CharField('Имя', max_length=15)
     lastname = models.CharField('Фамилия', max_length=30)
-    phonenumber = models.CharField('Номер телефона', max_length=12)
+    phonenumber = PhoneNumberField('Номер телефона', max_length=12)
     address = models.CharField('Адрес', max_length=100)
 
     STATUS_CHOICES = [
