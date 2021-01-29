@@ -1,11 +1,7 @@
 import requests
-import os
-from dotenv import load_dotenv
+from StarBurger.settings import yandex_apikey
 from geopy import distance as gp_distance
 from decimal import Decimal
-
-load_dotenv()
-yandex_apikey = os.environ['YANDEX_API_KEY']
 
 
 def fetch_coordinates(place, apikey=yandex_apikey):
