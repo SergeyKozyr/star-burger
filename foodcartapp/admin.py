@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.conf import settings
+from django.templatetags.static import static
 from django.utils.html import format_html
 from django.utils.http import is_safe_url
 from django.shortcuts import reverse, redirect
@@ -98,7 +99,7 @@ class ProductAdmin(admin.ModelAdmin):
     class Media:
         css = {
             "all": (
-                "admin/foodcartapp.css",
+                static("admin/foodcartapp.css")
             )
         }
 
