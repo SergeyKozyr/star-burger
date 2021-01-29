@@ -49,13 +49,6 @@ python -m venv venv
 cd star-burger
 ```
 
-Получите [API ключ Яндекса](https://developer.tech.yandex.ru/) и создайте переменные окружения:
-```
-YANDEX_API_KEY
-SECRET_KEY
-DEBUG
-```
-
 Установите зависимости в виртуальное окружение:
 ```sh
 pip install -r requirements.txt
@@ -142,6 +135,13 @@ Parcel будет следить за файлами в каталоге `bundle
 ```sh
 parcel build bundles-src/index.js -d bundles --public-url="./"
 ```
+
+Настроить бэкенд: создать файл `.env` в каталоге `StarBurger` со следующими настройками (все настройки кроме `YANDEX_API_KEY` имеют значения по умолчанию в файле `StarBurger/settings.py`):
+
+- `YANDEX_API_KEY` — ключ для api яндекс геокодера, [получить здесь](https://developer.tech.yandex.ru/)
+- `DEBUG` — дебаг-режим. Поставьте `False`.
+- `SECRET_KEY` — секретный ключ проекта. Им зашифрованы все пароли на вашем сайте, например. Не стоит использовать значение по-умолчанию.
+- `ALLOWED_HOSTS` — [см. документацию Django](https://docs.djangoproject.com/en/3.1/ref/settings/#allowed-hosts)
 
 ## Цели проекта
 
