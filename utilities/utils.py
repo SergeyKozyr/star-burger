@@ -1,10 +1,10 @@
 import requests
-from StarBurger.settings import yandex_apikey
+from django.conf import settings
 from geopy import distance as gp_distance
 from decimal import Decimal
 
 
-def fetch_coordinates(place, apikey=yandex_apikey):
+def fetch_coordinates(place, apikey=settings.YANDEX_API_KEY):
     base_url = "https://geocode-maps.yandex.ru/1.x"
     params = {"geocode": place, "apikey": apikey, "format": "json"}
     response = requests.get(base_url, params=params)
