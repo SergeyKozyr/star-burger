@@ -113,15 +113,19 @@ class Order(models.Model):
         return client_coordinates
 
     def get_restaurants(self):
-        order_items = self.items.all()
-        restaurant_items = set()
+        order_items = self.items.values('product')
+        restaurant_items = RestaurantMenuItem.objects.select_related('restaurant', 'product').filter(product__in=order_items).filter(availability=True)
+        products = {item.product for item in restaurant_items}
+        restaurants = []
 
-        for order_item in order_items:
-            restaurant_items.update(order_item.product.menu_items.filter(availability=True))
+        for product in products:
+            restaurants_with_item = {item.restaurant for item in restaurant_items if item.product == product}
+            restaurants.append(restaurants_with_item)
 
-        restaurants = {(order_item.restaurant, get_distance(self.get_coordinates(), order_item.restaurant.get_coordinates())) for order_item in restaurant_items}
+        restaurants_with_every_item = restaurants[0].intersection(*restaurants)
+        restaurants_distances = [(restaurant, get_distance(self.get_client_coordinates(), restaurant.get_coordinates())) for restaurant in restaurants_with_every_item]
 
-        return sorted(restaurants, key=itemgetter(1))
+        return sorted(restaurants_distances, key=itemgetter(1))
 
     def __str__(self):
         return f'{self.firstname} {self.lastname}, {self.address}'
