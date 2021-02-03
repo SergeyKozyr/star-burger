@@ -38,7 +38,6 @@ python --version
 ```sh
 python -m venv venv
 ```
-
 Активируйте его. На разных операционных системах это делается разными командами:
 - Windows: `.\venv\Scripts\activate`
 - MacOS/Linux: `source venv/bin/activate`
@@ -136,11 +135,11 @@ Parcel будет следить за файлами в каталоге `bundle
 parcel build bundles-src/index.js -d bundles --public-url="./"
 ```
 
-Настроить бэкенд: создать файл `.env` в каталоге `StarBurger` со следующими настройками (все настройки кроме `YANDEX_API_KEY` имеют значения по умолчанию в файле `StarBurger/settings.py`):
+Настроить бэкенд: создать файл `.env` в каталоге `star_burger/` со следующими настройками (все настройки кроме `YANDEX_API_KEY` имеют значения по умолчанию в файле `star_burger/settings.py`):
 
 - `YANDEX_API_KEY` — ключ для api яндекс геокодера, [получить здесь](https://developer.tech.yandex.ru/)
 - `DEBUG` — дебаг-режим. Поставьте `False`.
-- `SECRET_KEY` — секретный ключ проекта. Им зашифрованы все пароли на вашем сайте, например. Не стоит использовать значение по-умолчанию.
+- `SECRET_KEY` — секретный ключ проекта. Он отвечает за шифрование на сайте. Например, им зашифрованы все пароли на вашем сайте. Не стоит использовать значение по-умолчанию, **замените на своё**.
 - `ALLOWED_HOSTS` — [см. документацию Django](https://docs.djangoproject.com/en/3.1/ref/settings/#allowed-hosts)
 
 ## Цели проекта
